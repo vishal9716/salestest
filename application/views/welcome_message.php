@@ -1,6 +1,6 @@
-<?php echo $this->load->view("common/top"); ?>
-		<?php $this->load->view('header_message');?>
-		<?php $this->load->view('left_message');?>
+<?php $this->load->view("common/top"); ?>
+<?php $this->load->view('header_message');?>
+<?php $this->load->view('left_message');?>
 		 
         <div id="page-wrapper">
             <div class="row">

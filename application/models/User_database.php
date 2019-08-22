@@ -68,7 +68,7 @@ Class User_Database extends CI_Model {
         $this->db->where($condition);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
-            return 2;
+            return 1;
         } else {
             $this->db->insert('users', $data);
 //            $query = "insert into users values('','" . $data['username'] . "','" . $data['password'] . "','" . $data['fname'] . "','" . $data['lname'] . "','" . $data['email_id'] . "','" . $data['photo'] . "','" . $data['type'] . "','" . $data['status'] . "',now())";
@@ -86,9 +86,9 @@ Class User_Database extends CI_Model {
     }
 
     public function delete_user_data($uid) {
-        $query = "delete from users where uid='" . $uid . "'";
-        $this->db->query($query);
-        return 1;
+        $this->db->where('uid', $uid);
+        $result=$this->db->delete('users');
+        return $result;
     }
     
     function employee_types() {

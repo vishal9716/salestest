@@ -75,15 +75,11 @@ class User extends CI_Controller {
         $data['pagelinks'] = $this->pagination->create_links();
         $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
         $data['userdata'] = $this->user_database->userlist_info($page, $config["per_page"]);
+       
         $this->load->view('user_list', $data);
     }
 
     public function add_user() {
-//            $requestData= $_POST;
-//            echo "iuiu";
-//            echo '<pre>';
-//            print_r($requestData);
-//            die;
         $data['departments'] = $this->department_model->department_lists();
         $data['actionTakenBy']=$this->user_database->employee_types();
         if ($this->input->post('username')) {
@@ -100,34 +96,24 @@ class User extends CI_Controller {
                 'status' => $this->input->post('status')
             );
             //$data['departments']=$this->department_model->department_lists();		 
-            $result_user = $this->user_database->add_userlist($data);
-            if ($result_user != 2) {
-
-                $result = $this->user_database->userlist_info();
-                //print_r($result);
-                $data = array(
-                    'userdata' => $result,
-                );
-
-                $this->load->view('user_list', $data);
-            } else {
-                $data = array(
+            $user_exists = $this->user_database->add_userlist($data);
+            if ($user_exists == 1) {
+                 $data = array(
                     'error_message' => 'Username is already exist, Please try other username.'
                 );
                 $this->load->view('add_user', $data);
+            } else {
+                $data=$this->pagination_link();
+                $this->load->view('user_list', $data);
             }
         } else {
-
             $this->load->view('add_user', $data);
         }
     }
 
     // Edit user	
     public function edit_user() {
-        //echo "in--"; die;
         if ($this->input->post('username')) {
-
-
             $data = array(
                 'username' => $this->input->post('username'),
                 'password' => $this->input->post('password'),
@@ -139,17 +125,12 @@ class User extends CI_Controller {
                 'status' => $this->input->post('status'),
                 'userid' => $this->input->post('userid'),
             );
-
             $result_user = $this->user_database->edit_userlist($data);
-
-
             if ($result_user == 2) {
                 $result = $this->user_database->userlist_info();
-                //print_r($result);
                 $data = array(
                     'userdata' => $result,
                 );
-
                 echo '<script>alert("Records has been modified successfully.");</script>';
                 $this->load->view('user_list', $data);
             } else {
@@ -160,17 +141,13 @@ class User extends CI_Controller {
                 //echo '<script>alert("Records has been modified successfully.");</script>';
             }
         } else {
-
             $usid = $_GET['uid'];
             $this->load->model('user_database');
             $result_records = $this->user_database->userlist_info_data($usid);
-            //echo "<pre>";
-            //print_r($result_records); 
-            //die;
             $data = array(
                 'userrecord' => $result_records,
             );
-
+            $data['actionTakenBy']=$this->user_database->employee_types();
             $this->load->view('edit_user', $data);
         }
     }
@@ -188,6 +165,50 @@ class User extends CI_Controller {
 
             $this->load->view('user_list', $data);
         }
+    }
+    
+    public function delete_user_by_id() {
+        $usid = $this->input->post('uid');
+        $result_records = $this->user_database->delete_user_data($usid);
+        echo $result_records;
+        exit;
+    }
+    
+    private function pagination_link() {
+        $tr = $this->user_database->userlist_info();
+        $config['base_url'] = base_url() . 'user/index';        
+        $config['total_rows'] = count($tr);
+        $config['per_page'] = 5;
+        $config["uri_segment"] = 3;
+        
+        // Pagination start
+        $config['full_tag_open'] = "<ul class='pagination'>";
+        $config['full_tag_close'] = '</ul>';
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = '<li class="active"><a href="#">';
+        $config['cur_tag_close'] = '</a></li>';
+        $config['prev_tag_open'] = '<li>';
+        $config['prev_tag_close'] = '</li>';
+        $config['first_tag_open'] = '<li>';
+        $config['first_tag_close'] = '</li>';
+        $config['last_tag_open'] = '<li>';
+        $config['last_tag_close'] = '</li>';
+
+        $config['prev_link'] = '<i></i>Previous';
+        $config['prev_tag_open'] = '<li>';
+        $config['prev_tag_close'] = '</li>';
+
+        $config['next_link'] = 'Next<i></i>';
+        $config['next_tag_open'] = '<li>';
+        $config['next_tag_close'] = '</li>';
+        // pagination ends
+       
+        $this->pagination->initialize($config);
+        $data['pagelinks'] = $this->pagination->create_links();
+        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+        $data['userdata'] = $this->user_database->userlist_info($page, $config["per_page"]);
+        return $data;
     }
 
 }
