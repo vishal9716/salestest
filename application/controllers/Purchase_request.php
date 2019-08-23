@@ -21,8 +21,9 @@ class Purchase_request extends CI_Controller {
 	 function __construct() {
         // Call the Model constructor
         parent::__construct();
-		 $this->load->model('purchase_model');
-error_reporting(0);		 
+            $this->load->model('purchase_model');
+            $this->load->model('department_model');
+            error_reporting(0);		 
     }
 	public function index()
 	{
@@ -102,15 +103,16 @@ error_reporting(0);
 		}
 	
 	  // purchase request listing
-	  function purchase_request_list() {
-		//  echo "in"; die;
-		$prid='';
+	public function purchase_request_list() {
+            $prid='';
 	    $data['purchase_request_list']=$this->purchase_model->display_purchase_request($prid);
-		
-		// print_r($data); 
-		$this->load->view('purchase_request_list',$data);
+	    $data['department_list']=$this->department_model->departments();
+//	    echo "<pre>";	
+//            print_r($data); 
+//            die("66");
+            $this->load->view('purchase_request_list',$data);
 	   
-		}
+        }
 	
 	function display_pr_list($pr_srno) {
 	   //echo "in"; die;

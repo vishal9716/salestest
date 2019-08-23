@@ -62,7 +62,7 @@
                             <tbody>
 
                                 <?php
-                               // echo "<pre/>"; print_r($purchase_request_list); 
+                             //  echo "<pre/>"; print_r($purchase_request_list); 
                                 $i = 0;
                                 foreach ($purchase_request_list as $list) {
                                     $i++;
@@ -79,7 +79,7 @@
                                                 <?php echo $list['sr_no']; ?></a>
                                         </td>
 										<td><?php echo $list['unit_region_name']; ?></td>
-                                        <td><?php echo $list['department_name']; ?></td>
+                                        <td><?php echo $department_list[$list['department_id']]; ?></td>
                                        <td><?php echo date("d-m-Y", strtotime($list['pr_issue_date'])); ?></td>
                                         <td><?php echo $list['supplier_name']; ?></td>
                                         <!--<td><?php echo $list['pr_recd_on']; ?></td>-->

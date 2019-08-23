@@ -94,6 +94,7 @@ class Purchase_model extends CI_Model {
 		$result = $this->db->query($sql);
 		return $result;
 	}
+        
 	
 	// display department
 	function display_department($id=NULL) {
@@ -191,7 +192,7 @@ function display_purchase_request($id) {
             $sql = "select * from purchase_request where pr_id='" . $id . "'";
         } else {
 			 
-       $sql = "select distinct pr.sr_no,pr.status,pr.action_taken_by,pr.pr_issue_date,pr.supplier_name,pr.order_placed_by, prs.status_by,prs.pr_status_date,prs.remarks  from pr_status prs right join purchase_request pr  on prs.pr_no=pr.sr_no and prs.pr_status_date in(select max(prs.pr_status_date) from pr_status prs where pr.sr_no=prs.pr_no)"; 
+       $sql = "select distinct pr.sr_no,pr.department_id,pr.status,pr.action_taken_by,pr.pr_issue_date,pr.supplier_name,pr.order_placed_by, prs.status_by,prs.pr_status_date,prs.remarks  from pr_status prs right join purchase_request pr  on prs.pr_no=pr.sr_no and prs.pr_status_date in(select max(prs.pr_status_date) from pr_status prs where pr.sr_no=prs.pr_no)"; 
 
 /*$sql = "select distinct prs.pr_status,prs.status_by,prs.pr_status_date,prs.remarks,pr.sr_no, pr.department_id,pr.pr_issue_date,pr.supplier_name,pr.order_placed_by,pr.phone_person,pr.expense,pr.action_taken_by,pr.status,d.department_name from purchase_request pr join department d on(pr.department_id=d.department_id) left join  pr_status prs on(pr.sr_no=prs.pr_no) order by pr.pr_issue_date desc"; */
 			 
